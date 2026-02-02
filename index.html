@@ -2,87 +2,127 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>استعلام النتيجة</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f5f7fa;
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg,#4CAF50,#1B5E20);
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      padding: 20px;
     }
+
     .container {
       background: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      width: 350px;
+      border-radius: 15px;
+      padding: 30px 20px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
       text-align: center;
     }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #1B5E20;
+    }
+
     input {
       width: 80%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
+      padding: 12px;
+      border-radius: 8px;
       border: 1px solid #ccc;
+      font-size: 16px;
+      margin-bottom: 15px;
       text-align: center;
     }
+
     button {
-      padding: 10px 20px;
+      padding: 12px 25px;
+      font-size: 16px;
       background: #4CAF50;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
+      transition: 0.3s;
     }
+
     button:hover {
-      background: #45a049;
+      background: #388E3C;
     }
-    #result {
+
+    .result-card {
+      background: #E8F5E9;
+      border-radius: 12px;
+      padding: 20px;
       margin-top: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       text-align: left;
+      transition: 0.3s;
     }
-    h3 {
+
+    .result-card h2 {
+      margin-top: 0;
+      color: #1B5E20;
+    }
+
+    .result-card p {
       margin: 5px 0;
-      color: #333;
+      font-weight: 500;
+    }
+
+    @media(max-width: 600px){
+      .container {
+        padding: 20px 15px;
+      }
+      input {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
+
   <div class="container">
-    <h2>استعلام النتيجة</h2>
-    <input type="text" id="seat" placeholder="أدخل رقم الجلوس" />
+    <h1>استعلام النتيجة</h1>
+    <input type="text" id="seat" placeholder="أدخل رقم الجلوس">
     <button onclick="getResult()">استعلام</button>
 
     <div id="result"></div>
   </div>
 
   <script>
-    const WEB_APP_URL = "ضع هنا رابط الـ Web App من Google Script";
+    const WEB_APP_URL = "YOUR_WEB_APP_URL_HERE"; // ضع هنا رابط Google Script Web App
 
-    function getResult(){
-      const seat = document.getElementById("seat").value.trim();
-      if(seat === "") {
+    function getResult() {
+      const seat = document.getElementById('seat').value.trim();
+      if(seat === ""){
         alert("من فضلك أدخل رقم الجلوس");
         return;
       }
 
       fetch(`${WEB_APP_URL}?seat=${seat}`)
-        .then(res => res.json())
+        .then(response => response.json())
         .then(data => {
-          const resultDiv = document.getElementById("result");
+          const resultDiv = document.getElementById('result');
           if(Object.keys(data).length === 0){
-            resultDiv.innerHTML = "<p style='color:red'>رقم الجلوس غير موجود</p>";
+            resultDiv.innerHTML = `<p style="color:red;margin-top:20px;">رقم الجلوس غير موجود</p>`;
           } else {
             resultDiv.innerHTML = `
-              <h3>اسم الطالب: ${data.name}</h3>
-              المدرسة: ${data.school}<br>
-              المادة1: ${data.subject1}<br>
-              المادة2: ${data.subject2}<br>
-              المادة3: ${data.subject3}<br>
-              المجموع: ${data.total}
+              <div class="result-card">
+                <h2>اسم الطالب: ${data.name}</h2>
+                <p><strong>المدرسة:</strong> ${data.school}</p>
+                <p><strong>المادة 1:</strong> ${data.subject1}</p>
+                <p><strong>المادة 2:</strong> ${data.subject2}</p>
+                <p><strong>المادة 3:</strong> ${data.subject3}</p>
+                <p><strong>المجموع:</strong> ${data.total}</p>
+              </div>
             `;
           }
         })
@@ -92,5 +132,6 @@
         });
     }
   </script>
+
 </body>
 </html>
